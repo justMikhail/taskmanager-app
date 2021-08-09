@@ -1,3 +1,5 @@
+import {generateTask} from './mock/moks-task.js';
+
 import {createSiteMenuTemplate} from './view/site-menu.js';
 import {createFilterTemplate} from './view/filter.js';
 import {createTaskTemplate} from './view/task.js';
@@ -6,6 +8,9 @@ import {createLoadMoreButtonTemplate} from './view/load-more-button.js';
 import {createBoardTemplate} from './view/board.js';
 
 const TASK_COUNT = 3;
+const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+
+console.log(tasks)
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -14,17 +19,17 @@ const render = (container, template, place) => {
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = siteMainElement.querySelector('.main__control');
 
-render(siteHeaderElement, createSiteMenuTemplate(), 'beforeend');
-render(siteMainElement, createFilterTemplate(), 'beforeend');
-render(siteMainElement, createBoardTemplate(), 'beforeend');
+render(siteHeaderElement, createSiteMenuTemplate(), 'beforeEnd');
+render(siteMainElement, createFilterTemplate(), 'beforeEnd');
+render(siteMainElement, createBoardTemplate(), 'beforeEnd');
 
 const boardElement = siteMainElement.querySelector('.board');
 const taskListElement = boardElement.querySelector('.board__tasks');
 
-render(taskListElement, createTaskEditTemplate(), 'beforeend');
+render(taskListElement, createTaskEditTemplate(), 'beforeEnd');
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(taskListElement, createTaskTemplate(), 'beforeend');
+  render(taskListElement, createTaskTemplate(tasks[i]), 'beforeEnd');
 }
 
-render(boardElement, createLoadMoreButtonTemplate(), 'beforeend');
+render(boardElement, createLoadMoreButtonTemplate(), 'beforeEnd');
