@@ -1,14 +1,14 @@
-import {renderTemplate} from './utils/utils.js';
+import SiteMenuView from './view/site-menu.js';
 
-import {generateTask} from './mock/moks-task.js';
-import {generateFilter} from './mock/mock-filter';
-
-import {createSiteMenuTemplate} from './view/site-menu.js';
 import {createFilterTemplate} from './view/filter.js';
 import {createTaskTemplate} from './view/task.js';
 import {createTaskEditTemplate} from './view/task-edit.js';
 import {createLoadMoreButtonTemplate} from './view/load-more-button.js';
 import {createBoardTemplate} from './view/board.js';
+
+import {renderTemplate, renderElement, RenderPosition} from './utils/utils.js';
+import {generateTask} from './mock/moks-task.js';
+import {generateFilter} from './mock/mock-filter';
 
 const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
@@ -20,7 +20,7 @@ console.log(filters)
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = siteMainElement.querySelector('.main__control');
 
-renderTemplate(siteHeaderElement, createSiteMenuTemplate(), 'beforeEnd');
+renderElement(siteHeaderElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, createFilterTemplate(filters), 'beforeEnd');
 renderTemplate(siteMainElement, createBoardTemplate(), 'beforeEnd');
 
