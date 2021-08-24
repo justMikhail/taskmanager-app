@@ -1,24 +1,19 @@
 import dayjs from "dayjs";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/utils';
 
 export const createTaskTemplate = (task) => {
 
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
   const date = dueDate !== null
-    ? dayjs(dueDate).format("D MMMM")
+    ? humanizeTaskDueDate(dueDate)
     : "";
 
-  const isExpired = (dueDate) => dueDate === null
-    ? false
-    : dayjs().isAfter(dueDate, 'D');
-
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? 'card--deadline'
     : '';
 
-  const isRepeating = (repeating) => Object.values(repeating).some(Boolean);
-
-  const repeatClassName = isRepeating(repeating)
+  const repeatClassName = isTaskRepeating(repeating)
     ? 'card--repeat'
     : '';
 
