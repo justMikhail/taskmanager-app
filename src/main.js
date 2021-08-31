@@ -7,6 +7,7 @@ import BoardView from './view/board.js';
 import SortView from './view/sort.js';
 import TaskListView from './view/task-list.js';
 import NoTaskView from './view/no-task.js';
+
 import {generateTask} from './mock/moks-task';
 import {generateFilter} from './mock/mock-filter.js';
 import {render, RenderPosition} from './utils/utils.js';
