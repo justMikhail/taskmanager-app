@@ -1,3 +1,4 @@
+import AbstractView from './abstract';
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from '../utils/utils';
 
 const createTaskTemplate = (task) => {
@@ -6,7 +7,7 @@ const createTaskTemplate = (task) => {
 
   const date = dueDate !== null
     ? humanizeTaskDueDate(dueDate)
-    : "";
+    : '';
 
   const deadlineClassName = isTaskExpired(dueDate)
     ? 'card--deadline'
@@ -67,29 +68,17 @@ const createTaskTemplate = (task) => {
       </div>
     </div>
   </article>`
-  )
+  );
 };
 
-export default class Task {
-  constructor(task) {
-    this._task = task;
+export default class Task extends AbstractView {
 
-    this._element = null;
+  constructor(task) {
+    super();
+    this._task = task;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
+import AbstractView from './abstract';
 import {COLORS} from '../const/const';
-import {isTaskRepeating, humanizeTaskDueDate, createElement} from '../utils/utils.js';
+import {isTaskRepeating, humanizeTaskDueDate} from '../utils/utils.js';
 
 const BLANK_TASK = {
   color: COLORS[0],
@@ -57,9 +58,7 @@ const createTaskEditRepeatingTemplate = (repeating) => (
   </fieldset>` : ''}`
 );
 
-const createTaskEditColorsTemplate = (currentColor) => {
-
-  return COLORS.map((color) => `<input
+const createTaskEditColorsTemplate = (currentColor) => COLORS.map((color) => `<input
     type="radio"
     id="color-${color}"
     class="card__color-input card__color-input--${color} visually-hidden"
@@ -71,8 +70,7 @@ const createTaskEditColorsTemplate = (currentColor) => {
     for="color-${color}"
     class="card__color card__color--${color}"
     >${color}</label
-  >`).join('')
-};
+  >`).join('');
 
 const createTaskEditTemplate = (task) => {
 
@@ -80,14 +78,13 @@ const createTaskEditTemplate = (task) => {
 
   const dateTemplate = createTaskEditDateTemplate(dueDate);
 
-  const repeatingClassName = isTaskRepeating(repeating)
+  const repeatingClassName = isTaskRepeating(repeating);
 
   const repeatingTemplate = createTaskEditRepeatingTemplate(repeating);
 
   const colorsTemplate = createTaskEditColorsTemplate(color);
 
-  return (
-  `<article class="card card--edit card--${color} ${repeatingClassName}">
+  return (`<article class="card card--edit card--${color} ${repeatingClassName}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">
@@ -132,28 +129,16 @@ const createTaskEditTemplate = (task) => {
         </div>
       </div>
     </form>
-  </article>`)
+  </article>`);
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractView{
   constructor(task = BLANK_TASK) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskEditTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
