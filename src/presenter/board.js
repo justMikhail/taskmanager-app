@@ -2,10 +2,11 @@ import BoardView from '../view/board.js';
 import SortView from '../view/sort.js';
 import TaskListView from '../view/task-list.js';
 import NoTaskView from '../view/no-task.js';
-import TaskView from '../view/task.js';
-import TaskEditView from '../view/task-edit.js';
 import LoadMoreButtonView from '../view/load-more-button.js';
-import {render, RenderPosition, replace, remove} from '../utils/render.js';
+
+import TaskPresenter from './task.js';
+
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -13,6 +14,7 @@ export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
+    this._taskPresenter = new Map();
 
     this._boardComponent = new BoardView();
     this._sortComponent = new SortView();
@@ -36,36 +38,9 @@ export default class Board {
   }
 
   _renderTask(task) {
-    const taskComponent = new TaskView(task);
-    const taskEditComponent = new TaskEditView(task);
-
-    const replaceCardToForm = () => {
-      replace(taskEditComponent, taskComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(taskComponent, taskEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    taskComponent.setEditClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    taskEditComponent.setFormSubmitHandler(() => {
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    render(this._taskListComponent, taskComponent, RenderPosition.BEFORE_END);
+    const taskPresenter = new TaskPresenter(this._taskListComponent);
+    taskPresenter.init(task);
+    this._taskPresenter.set(task.id, taskPresenter);
   }
 
   _renderTasks(from, to) {
@@ -91,6 +66,13 @@ export default class Board {
     render(this._boardComponent, this._loadMoreButtonComponent, RenderPosition.BEFORE_END);
 
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+  }
+
+  _clearTaskList() {
+    this._taskPresenter.forEach((presenter) => presenter.destroy());
+    this._taskPresenter.clear();
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
+    remove(this._loadMoreButtonComponent);
   }
 
   _renderTaskList() {
